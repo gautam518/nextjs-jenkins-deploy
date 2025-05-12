@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'gautam518/nextjs-app1:latest'
-        KUBE_CONFIG = credentials('kubeconfig')  // Optional: if using kubeconfig as a secret file
+        KUBECONFIG = '/var/jenkins_home/.kube/config'
     }
 
     stages {
@@ -34,12 +34,20 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Use kubectl directly (assumes ~/.kube/config is accessible in Jenkins)
+                    echo "Applying Kubernetes manifests using kubeconfig at $KUBECONFIG"
                     sh '''
+                    kubectl version --short
                     kubectl apply -f nextjs-deploy.yaml
+                    kubectl get pods
                     '''
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
         }
     }
 }
