@@ -3,13 +3,16 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'gautam518/nextjs-app1:latest'
-        KUBECONFIG = '/var/jenkins_home/.kube/config'
+        KUBE_CONFIG = credentials('kubeconfig')  // Optional: if using kubeconfig as a secret file
     }
 
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/your/repository.git'
+                script {
+                    // Use the GitHub personal access token for authentication
+                    git url: 'https://github.com/gautam518/nextjs-jenkins-deploy.git', credentialsId: 'github-credentials'
+                }
             }
         }
 
@@ -34,21 +37,12 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    echo "Applying Kubernetes manifests using kubeconfig at $KUBECONFIG"
+                    // Use kubectl directly (assumes ~/.kube/config is accessible in Jenkins)
                     sh '''
-                    kubectl version --short
                     kubectl apply -f nextjs-deploy.yaml
-                    kubectl get pods
                     '''
                 }
             }
         }
     }
-
-    post {
-        always {
-            echo 'Pipeline completed.'
-        }
-    }
 }
-
