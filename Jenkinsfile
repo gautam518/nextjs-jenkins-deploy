@@ -9,10 +9,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                script {
-                    // Use the GitHub personal access token for authentication
-                    git url: 'https://github.com/gautam518/nextjs-jenkins-deploy.git', credentialsId: 'github-credentials'
-                }
+                git 'https://github.com/your/repository.git'
             }
         }
 
@@ -39,10 +36,11 @@ pipeline {
                 script {
                     // Use kubectl directly (assumes ~/.kube/config is accessible in Jenkins)
                     sh '''
-                    kubectl apply -f nextjsnew-deploy.yaml
+                    kubectl apply -f nextjs-deploy.yaml
                     '''
                 }
             }
         }
     }
 }
+
