@@ -39,7 +39,7 @@ pipeline {
                 script {
                     // Use kubectl directly (assumes ~/.kube/config is accessible in Jenkins)
                     sh '''
-                    kubectl apply -f nextjs-deploy.yaml
+                    kubectl apply -f nextjsnew-deploy.yaml
                     '''
                 }
             }
